@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Data
 @Entity
 public class AddressBookData {
-
     @Id
     private int id;
     private String name;
