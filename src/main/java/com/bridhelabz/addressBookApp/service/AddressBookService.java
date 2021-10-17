@@ -2,7 +2,9 @@ package com.bridhelabz.addressBookApp.service;
 
 import com.bridhelabz.addressBookApp.dto.*;
 import com.bridhelabz.addressBookApp.entity.*;
+import com.bridhelabz.addressBookApp.exception.*;
 import com.bridhelabz.addressBookApp.repository.*;
+import org.modelmapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -19,17 +21,18 @@ import java.util.*;
 @Service
 public class AddressBookService {
 
+
     @Autowired
-    private static AddressBookRepository addressBookRepository;
-//    @Autowired
-//    private ModelMapper modelMapper;
+    private  AddressBookRepository addressBookRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     /**
      * Method for getting all the students from database
      * @return list of {@link AddressBookData Entity}
      */
 
-    public static List<AddressBookData> addressBookDataList(){
+    public List<AddressBookData> addressBookDataList(){
         return addressBookRepository.findAll();
     }
 
@@ -55,7 +58,7 @@ public class AddressBookService {
         return null;
     }
 
-    public AddressBookData getPersonByMobileNo(int mobileNo){
+    public AddressBookData getPersonByMobileNo(String mobileNo){
         Optional<AddressBookData> addressBookData = addressBookRepository.findByMobileNo(mobileNo);
         if (addressBookData.isPresent()){
             return addressBookData.get();
@@ -87,15 +90,11 @@ public class AddressBookService {
         return null;
     }
 
-    /**
-     *
-     * @param addressBookData
-     * @return
-     */
-
     public AddressBookData addPerson(AddressBookData addressBookData){
+        AddressBookDTO addressBookDTO = new AddressBookDTO();
+        modelMapper.map(addressBookDTO, addressBookData);
         return addressBookRepository.save(addressBookData);
-
+        //return addressBookRepository.save(addressBookData);
     }
 
     public String deletePerson(int id){
@@ -104,11 +103,35 @@ public class AddressBookService {
             addressBookRepository.delete(addressBookData.get());
             return "Employee Record is deleted successfully.";
         }
-        return "Record does not exists with this id : " + id;
-
+        //return "Record does not exists with this id : " + id;
+        throw new CustomException("Record does not exists with this id : " + id);
     }
 
-    public AddressBookData updatePerson( AddressBookData addressBookData){
-        return addressBookRepository.save(addressBookData);
+    public AddressBookData updatePerson(int id, AddressBookDTO addressBookDTO){
+        Optional<AddressBookData> optionalAddressBookEntity = addressBookRepository.findById(id);
+        if(optionalAddressBookEntity.isPresent()) {
+            AddressBookData addressBookData = optionalAddressBookEntity.get();
+            addressBookData.setId(addressBookDTO.getId());
+            addressBookData.setName(addressBookDTO.getName());
+            addressBookData.setState(addressBookData.getState());
+            addressBookData.setCity(addressBookData.getCity());
+            addressBookData.setMobileNo(addressBookData.getMobileNo());
+            addressBookData.setEmail(addressBookData.getEmail());
+            return addressBookRepository.save(addressBookData);
+        }
+        //return addressBookRepository.save(addressBookData);
+        return null;
+    }
+    List<AddressBookDTO> addresses;
+    public List<AddressBookDTO> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressBookDTO> addresses) {
+        this.addresses = addresses;
+    }
+
+    public AddressBookDTO addAddressBook(AddressBookDTO addressBookDTO) {
+        return addressBookDTO;
     }
 }

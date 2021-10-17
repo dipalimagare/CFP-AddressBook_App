@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.*;
+
 @RestController
+@RequestMapping("/Api")
 public class AddressBookController {
 // CRUD
     //read
@@ -17,6 +20,11 @@ public class AddressBookController {
 
     @Autowired
     private AddressBookService addressBookService;
+
+    @GetMapping(value = "/person")
+    public List<AddressBookData> person(){
+        return addressBookService.addressBookDataList();
+    }
 
     @GetMapping(value = "/get-person-by-id")
     public AddressBookData getPersonById(@RequestParam int id){
@@ -29,7 +37,7 @@ public class AddressBookController {
     }
 
     @GetMapping(value = "/get-person-by-mobile")
-    public AddressBookData getPersonByMobileNo(@RequestParam int mobileNo){
+    public AddressBookData getPersonByMobileNo(@RequestParam String mobileNo){
         return addressBookService.getPersonByMobileNo(mobileNo);
     }
 
@@ -48,17 +56,17 @@ public class AddressBookController {
         return addressBookService.getPersonByEmail(email);
     }
 
-    @PostMapping(value = "/person")
+    @PostMapping(value = "/person-get")
     public AddressBookData addPerson(@RequestBody AddressBookData addressBookData) {
         return addressBookService.addPerson(addressBookData);
     }
 
     @PutMapping(value = "/person")
-    public AddressBookData updatePerson(@RequestBody AddressBookData addressBookData) {
-        return addressBookService.updatePerson(addressBookData);
+    public AddressBookData updatePerson(@PathVariable int id, @RequestBody AddressBookDTO addressBookDTO) {
+        return addressBookService.updatePerson(id, addressBookDTO);
     }
 
-    @DeleteMapping(value = "/person")
+    @DeleteMapping(value = "/person-delete")
     public String deletePerson(@RequestParam int id) {
         return addressBookService.deletePerson(id);
     }

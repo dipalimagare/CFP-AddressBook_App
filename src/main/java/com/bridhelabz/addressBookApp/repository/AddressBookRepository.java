@@ -3,7 +3,6 @@ package com.bridhelabz.addressBookApp.repository;
 import com.bridhelabz.addressBookApp.entity.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.*;
-
 import java.util.*;
 
 @Repository
@@ -11,7 +10,7 @@ public interface AddressBookRepository extends JpaRepository<AddressBookData, In
 
     Optional<AddressBookData> findByName(String name);
 
-    Optional<AddressBookData> findByMobileNo(int mobileNo);
+    Optional<AddressBookData> findByMobileNo(String mobileNo);
 
     Optional<AddressBookData> findByState(String state);
 
