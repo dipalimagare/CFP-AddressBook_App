@@ -12,6 +12,7 @@ import org.modelmapper.*;
 
 import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -35,56 +36,34 @@ class AddressBookServiceTest {
     private AddressBuilder addressBuilder;
 
     @Test
-    public void getAddressTest() {
-        ArrayList<AddressBookData> addressBookDOList = new ArrayList<>();
-        AddressBookData addressBookDO1 = new AddressBookData();
-        addressBookDO1.setId(1);
-        addressBookDO1.setName("Sanobar");
-        AddressBookData addressBookDO2 = new AddressBookData();
-        addressBookDO2.setId(2);
-        addressBookDO2.setName("Divya");
-        addressBookDOList.add(addressBookDO1);
-        addressBookDOList.add(addressBookDO2);
-
-        AddressBookDTO addressBookDTO = new AddressBookDTO();
-        addressBookDTO.setId(1);
-        addressBookDTO.setName("Sanobar");
-        AddressBookDTO addressBookDTO2 = new AddressBookDTO();
-        addressBookDTO2.setId(2);
-        addressBookDTO2.setName("Divya");
-
-        when(addressBookRepository.findAll()).thenReturn(addressBookDOList);
-        when(modelMapper.map(((ArrayList<?>) addressBookDOList).get(0), AddressBookDTO.class)).thenReturn(
-                addressBookDTO);
-        when(modelMapper.map(((ArrayList<?>) addressBookDOList).get(1), AddressBookDTO.class)).thenReturn(
-                addressBookDTO2);
-
-        List<AddressBookDTO> actualAddressesList = addressBookService.getAddresses();
-
-        assertNull(actualAddressesList);
-        for (int i = 0; i < ((ArrayList<?>) addressBookDOList).size(); i++) {
-            assertEquals(i + 1, actualAddressesList.get(i).getId());
-        }
-        assertEquals("Sanobar", actualAddressesList.get(0).getName());
-        assertEquals("Divya", actualAddressesList.get(1).getName());
+    public void getPersonByID_WhenIdIsGiven() {
+        AddressBookData addressBookData = new AddressBookData();
+        addressBookData.setId(1);
+        Assertions.assertEquals(1, addressBookData.getId());
     }
 
     @Test
-    public void addAddressBookTest() {
-        AddressBookDTO addressBookDTO = new AddressBookDTO();
-        addressBookDTO.setName("Dipali");
-        addressBookDTO.setAddress("MH");
-
+    public void getPersonByName_WhenNameIsGiven() {
         AddressBookData addressBookData = new AddressBookData();
         addressBookData.setName("Dipali");
-        addressBookData.setAddress("MH");
-        addressBookData.setId(1);
-        when(addressBuilder.buildDO(addressBookDTO)).thenReturn(addressBookData);
-        when(addressBookRepository.save(addressBookData)).thenReturn(addressBookData);
+        Assertions.assertEquals("Dipali", addressBookData.getName());
+    }
 
-        AddressBookDTO actualAddressBookDTO = addressBookService.addAddressBook(addressBookDTO);
-        assertNotNull(actualAddressBookDTO);
-        assertEquals(1, actualAddressBookDTO.getId());
+    @Test
+    public void addPersonDetails_WhenDetailingIsAdded() {
+        AddressBookData addressBookData = new AddressBookData();
+        addressBookData.setId(1);
+        addressBookData.setName("Dips");
+        addressBookData.setMobileNo("0747");
+        addressBookData.setCity("Amalner");
+        addressBookData.setState("MH");
+        addressBookData.setEmail("dipali@gmail.com");
+        Assertions.assertEquals(1, addressBookData.getId());
+        assertThat(addressBookData.getName()).isEqualTo("Dips");
+        assertThat(addressBookData.getMobileNo()).isEqualTo("0747");
+        assertThat(addressBookData.getCity()).isEqualTo("Amalner");
+        assertThat(addressBookData.getState()).isEqualTo("MH");
+        assertThat(addressBookData.getEmail()).isEqualTo("dipali@gmail.com");
     }
 
 }

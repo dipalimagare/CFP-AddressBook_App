@@ -12,18 +12,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @ControllerAdvice
-public class CustomExceptionHandler {
-
-   /* @ExceptionHandler(value = CustomException.class)
-    public ResponseEntity<ResponseDTO> handleCustomException(CustomException customException){
-        return new ResponseEntity<>(new ResponseDTO(customException.getMessage(), null), HttpStatus.BAD_REQUEST);
-    }*/
-
-
-   /* @ExceptionHandler(value = ValidationException.class)
-    public ResponseEntity<ResponseDTO> handleValidationException(ValidationException validationException){
-        return new ResponseEntity<>(new ResponseDTO(validationException.getMessage(), null), HttpStatus.NOT_FOUND);
-    }*/
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDTO> globalExceptionHandler(Exception ex) {
